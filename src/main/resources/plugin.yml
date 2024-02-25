@@ -1,0 +1,4 @@
+name: Block_clock
+version: '${version}'
+main: org.minty.block_clock.Block_clock
+api-version: '1.20'
