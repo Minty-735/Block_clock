@@ -15,10 +15,23 @@ public class clockSpawner implements CommandExecutor {
 //            return false;
 //        }
 //        Player player = (Player) sender;
+//
+//        for (int i = args.length - 1; i >= 0; i--) {
+//            String arg = args[i];
+//
+//        }
+//
+//
+//
+
+
+
+
+
 
 /**
+ *
  /clock {startloc} {endloc} {format -||- ->} {UTC - по желанию, будет дефолт конфиг} {block - по желанию, будет дефолт конфиг}
- направление, куда смотрят часы
  понятно как-бы
  тоже подумать как сделать, обязателен ли вообще этот параметр и как парсить все твердые блоки майнкрафта
  формат? надо подумать надо ли? 12/24

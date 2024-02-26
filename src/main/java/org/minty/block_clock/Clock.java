@@ -39,7 +39,6 @@ public class Clock {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     @Override
