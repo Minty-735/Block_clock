@@ -26,7 +26,7 @@ public final class Block_clock extends JavaPlugin {
         /* todo Надо сделать так чтобы когда плагин выключался то он бы записывал куда-то где расположены все часы в мире и еще надо чтобы он при отключении удалял блоки часов
          *
          * */
-
+        getCommand("clock").setExecutor(new clockSpawner());
         METADATA.PLUGIN = this;
 
 
@@ -53,6 +53,7 @@ public final class Block_clock extends JavaPlugin {
     public void onDisable() {
         thread.interrupt();
     }
+
 }
 
 @SuppressWarnings("ALL")
