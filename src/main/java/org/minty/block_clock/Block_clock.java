@@ -7,7 +7,7 @@ import org.yaml.snakeyaml.util.EnumUtils;
 
 import java.io.File;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.*;import org.bukkit.Bukkit;
 
 public final class Block_clock extends JavaPlugin {
     Thread thread;
@@ -20,6 +20,7 @@ public final class Block_clock extends JavaPlugin {
     public static File DataFolder;
 
     public static Clock testClock;
+    public static Set<GrandClock> Clocks = new HashSet<>();
 
     @Override
     public void onEnable() {
@@ -39,8 +40,9 @@ public final class Block_clock extends JavaPlugin {
 
 
         testClock = new Clock("test");
-        testClock.loadConfig();
-        Runnable myRunnable = new Runnable();
+//        testClock.loadConfig();
+
+        Runnable myRunnable = new CustomRunnable();
 
 
         thread = new Thread(myRunnable);
@@ -56,25 +58,26 @@ public final class Block_clock extends JavaPlugin {
 
 }
 
-@SuppressWarnings("ALL")
-class Runnable implements java.lang.Runnable {
+
+
+class CustomRunnable implements java.lang.Runnable {
     @Override
     public void run() {
-        {
-            while (!Thread.currentThread().isInterrupted()) {
-                Clock clock = Block_clock.testClock;
-                String time =
-                        clock.updateTime();
-                System.out.println("time = " + time);
-
-                try {
-                    // Задержка 1 сек
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                    Thread.currentThread().interrupt(); // Прерывание
-                    return;
+        while (!Thread.currentThread().isInterrupted()) {
+            // Выполняем задачу в основном потоке Bukkit
+            Bukkit.getScheduler().runTask(METADATA.PLUGIN, () -> {
+                for (GrandClock Gclock : Block_clock.Clocks){
+                    Gclock.UpdateTime();
                 }
+            });
+
+            try {
+                // Задержка 1 сек
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                Thread.currentThread().interrupt(); // Прерывание
+                return;
             }
         }
     }

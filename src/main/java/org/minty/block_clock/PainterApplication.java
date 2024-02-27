@@ -5,13 +5,10 @@ import java.awt.image.BufferedImage;
 import java.util.Arrays;
 
 public class PainterApplication {
-    /*
-    * Господь храни интернет
-    * */
-    public static void main(String[] args) {
-        String text = "12:22:31 AM  ";
-        int desiredHeight = 80;
-        int desiredWidth = 400;
+    public static char[][] calc(String text,int horizont, int vertikal) {
+//        String text = "12:22:31 AM  ";
+        int desiredWidth = horizont;
+        int desiredHeight = vertikal;
         // Создаем BufferedImage для измерения текста
         BufferedImage tempImg = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
         Graphics2D tempG2d = tempImg.createGraphics();
@@ -74,23 +71,19 @@ public class PainterApplication {
                 int pixel = resizedImg.getRGB(j, i);
 
                 if ((pixel >> 24) == 0x00) {
+
                     result[i][j] = '*';
+
                 } else {
+
                     result[i][j] = ' ';
+
                 }
             }
         }
 
-        {
-            for (int j = 0; j < result[0].length; j++) {
 
-                for (int i = 0; i < result.length; i++) {
-                    System.out.print(result[i][j] + " ");
-                }
-                System.out.println();
-            }
-        }
-
+        return result;
 
     }
 
