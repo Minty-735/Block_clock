@@ -1,7 +1,10 @@
 package org.minty.block_clock;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 
 public class PainterApplication {
@@ -64,12 +67,10 @@ public class PainterApplication {
 //            ex.printStackTrace();
 //        }
 
-
         char[][] result = new char[field.length][field[0].length];
         for (int i = 0; i < field.length; i++) {
             for (int j = 0; j < field[0].length; j++) {
                 int pixel = resizedImg.getRGB(j, i);
-
                 if ((pixel >> 24) == 0x00) {
 
                     result[i][j] = '*';

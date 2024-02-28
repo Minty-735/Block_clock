@@ -1,4 +1,4 @@
- package org.minty.block_clock;
+ package org.minty.block_clock.trash;
 
 import java.util.ArrayList;
 import java.util.HashMap;

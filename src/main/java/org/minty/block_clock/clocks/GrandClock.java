@@ -1,13 +1,10 @@
-package org.minty.block_clock;
+package org.minty.block_clock.clocks;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.minty.block_clock.PainterApplication;
 
-import java.util.HashMap;
-import java.util.Spliterators;
-
-import static org.minty.block_clock.Block_clock.ClockMap;
 import static org.minty.block_clock.Block_clock.Clocks;
 
 public class GrandClock {
@@ -16,16 +13,14 @@ public class GrandClock {
     public GrandClock(Clock clock) {
         this.clock = clock;
         Clocks.add(this);
-        System.out.println("clock = " + clock);
 
     }
 
 
-    public void UpdateTime() {
 
+    public void UpdateTime() {
         String time = clock.updateTime();
-        System.out.println("time = " + time);
-//        HashMap<int,int>
+
 
         Location loc1 = clock.getStartLocation();
         Location loc2 = clock.getEndlocation();
@@ -36,9 +31,34 @@ public class GrandClock {
         int x2 = loc2.getBlockX();
         int y2 = loc2.getBlockY();
         int z2 = loc2.getBlockZ();
+/*
 
+x
+y
+z
+200
+0
+50
+
+
+x
+y
+z
+100
+50
+50
+
+
+
+
+
+
+
+
+ */
 
         int horiz = Math.abs(x2 - x1);
+
         int vert = Math.abs(y1 - y2);
         char[][] chats = new char[vert][horiz];
 
@@ -46,8 +66,8 @@ public class GrandClock {
         chats = PainterApplication.calc(time, horiz, vert);
 
         chats = reverseArray(chats);
-        Material black = Material.BEDROCK;
-        Material white = Material.DIAMOND_BLOCK;
+        Material black = clock.getTextBlock();
+        Material white = clock.getBackgroundBlock();
         for (int y = 0; y < chats.length; y++) {
             for (int x = 0; x < chats[0].length; x++) {
                 char pixel = chats[y][x];
@@ -64,8 +84,6 @@ public class GrandClock {
                 }
             }
         }
-
-
     }
 
     private char[][] reverseArray(char[][] chars) {

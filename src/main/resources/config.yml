@@ -1,4 +1,6 @@
 settings:
 #Default time
   utc: "UTC+3"
-
+  format: "24"
+  textBlock: OBSIDIAN
+  backgroundBlock: GLASS
