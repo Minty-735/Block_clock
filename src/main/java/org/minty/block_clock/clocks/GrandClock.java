@@ -5,7 +5,10 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.minty.block_clock.PainterApplication;
 
+import java.util.ArrayList;
+
 import static org.minty.block_clock.Block_clock.Clocks;
+import static org.minty.block_clock.trash.calc_line.drawLine;
 
 public class GrandClock {
     private Clock clock;
@@ -15,7 +18,6 @@ public class GrandClock {
         Clocks.add(this);
 
     }
-
 
 
     public void UpdateTime() {
@@ -31,41 +33,18 @@ public class GrandClock {
         int x2 = loc2.getBlockX();
         int y2 = loc2.getBlockY();
         int z2 = loc2.getBlockZ();
-/*
 
-x
-y
-z
-200
-0
-50
+        int horiz = x2;
 
-
-x
-y
-z
-100
-50
-50
-
-
-
-
-
-
-
-
- */
-
-        int horiz = Math.abs(x2 - x1);
-
-        int vert = Math.abs(y1 - y2);
+        int vert = y2;
         char[][] chats = new char[vert][horiz];
 
 
         chats = PainterApplication.calc(time, horiz, vert);
-
+//chats - массив который показывает картинку
+        createMatrix(loc1, loc2);
         chats = reverseArray(chats);
+
         Material black = clock.getTextBlock();
         Material white = clock.getBackgroundBlock();
         for (int y = 0; y < chats.length; y++) {
@@ -85,6 +64,31 @@ z
             }
         }
     }
+
+
+    private Location[][] createMatrix(Location loc1, Location loc2) {
+        int x1 = (int) loc1.getX();
+        int z1 = (int) loc1.getZ();
+        int x2 = (int) loc2.getX();
+        int z2 = (int) loc2.getZ();
+
+        ArrayList<Integer> test = drawLine(x1,z1,x2,z2);
+//todo Доделать!!!!
+//        по теореме пифагора узнать длинну и ее как эээээээ
+//        char[сюда кароч][а сюда высоту]
+
+
+
+        for (int i = 0; i < test.size(); i += 2) {
+            System.out.println(test.get(i).toString() + " - " + test.get(i + 1).toString());
+
+        }
+
+        int len = (int) Math.sqrt((double) (3 * 3 + 4 * 4));
+        System.out.println(len);
+        ArrayList<Integer> test;
+    }
+
 
     private char[][] reverseArray(char[][] chars) {
         int rows = chars.length;

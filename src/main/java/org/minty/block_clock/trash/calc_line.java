@@ -5,9 +5,9 @@ import java.util.HashMap;
 
  public class calc_line {
     //xD своровал свой же код
-    public static HashMap<Integer, Integer> drawLine(int x1, int y1, int x2, int y2) {
+    public static ArrayList<Integer> drawLine(int x1, int y1, int x2, int y2) {
         ArrayList<Integer> result = new ArrayList<>();
-        HashMap<Integer, Integer> result1 = new HashMap<>();
+
 
 
         int dx = Math.abs(x2 - x1);
@@ -23,9 +23,9 @@ import java.util.HashMap;
 
         while (true) {
             // Добавляем текущую точку в результат
-            result1.put(x,y);
-//            result.add(x);
-//            result.add(y);
+
+            result.add(x);
+            result.add(y);
 
             // Проверяем, достигли ли конечной точки
             if (x == x2 && y == y2) {
@@ -46,6 +46,6 @@ import java.util.HashMap;
             }
         }
 
-        return result1;
+        return result;
     }
 }
