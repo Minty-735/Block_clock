@@ -5,6 +5,7 @@ import java.util.HashMap;
 
  public class calc_line {
     //xD своровал свой же код
+
     public static ArrayList<Integer> drawLine(int x1, int y1, int x2, int y2) {
         ArrayList<Integer> result = new ArrayList<>();
 

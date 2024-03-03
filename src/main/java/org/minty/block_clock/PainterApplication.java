@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.util.Arrays;
 
 public class PainterApplication {
+    /**result[ВЫСОТА][ШИРИНА]
+*/
     public static char[][] calc(String text,int horizont, int vertikal) {
 //        String text = "12:22:31 AM  ";
         int desiredWidth = horizont;
