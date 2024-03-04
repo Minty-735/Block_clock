@@ -5,3 +5,4 @@ api-version: '1.18'
 #api-version: '1.2
 commands:
   clock:
+  clock_settings:

@@ -16,22 +16,24 @@ public class clockSpawner implements CommandExecutor {
  /clock {startloc} {endloc} {name} {format -||- ->} {UTC - по желанию, будет дефолт конфиг} {block - по желанию, будет дефолт конфиг}
  понятно как-бы
  тоже подумать как сделать, обязателен ли вообще этот параметр и как парсить все твердые блоки майнкрафта
- формат? надо подумать надо ли? 12/24
+ формат? Надо подумать надо ли? 12/24
  надо ли координаты начала
  */
 
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
-        World world = null;
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
+        World world;
+        if (sender instanceof Player player) {
             world = player.getWorld();
-        } else {
-
-            for (Player p : Bukkit.getOnlinePlayers()) {
-                world = p.getWorld();
-                break;
-            }
         }
+        else {
+            return false;
+        }
+//        else {
+//            for (Player p : Bukkit.getOnlinePlayers()) {
+//                world = p.getWorld();
+//                break;
+//            }
+//        }
 
 
         Location loc1 = new Location(world, Double.parseDouble(args[0]), Double.parseDouble(args[1]), Double.parseDouble(args[2]));

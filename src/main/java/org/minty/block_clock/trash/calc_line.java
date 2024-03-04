@@ -1,7 +1,6 @@
  package org.minty.block_clock.trash;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+ import java.util.ArrayList;
 
  public class calc_line {
     //xD своровал свой же код

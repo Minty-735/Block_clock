@@ -26,6 +26,7 @@ public class Clock {
     public Location getEndlocation() {
         return endlocation;
     }
+
     private Location startLocation;
     private Location endlocation;
     private String format;
@@ -80,15 +81,7 @@ public class Clock {
 
     @Override
     public String toString() {
-        return "Clock{" +
-                "startLocation=" + startLocation +
-                ", endlocation=" + endlocation +
-                ", format='" + format + '\'' +
-                ", utc=" + utc +
-                ", name='" + name + '\'' +
-                ", textBlock=" + textBlock +
-                ", backgroundBlock=" + backgroundBlock +
-                '}';
+        return "Clock{" + "startLocation=" + startLocation + ", endlocation=" + endlocation + ", format='" + format + '\'' + ", utc=" + utc + ", name='" + name + '\'' + ", textBlock=" + textBlock + ", backgroundBlock=" + backgroundBlock + '}';
     }
 
     private void getDefaultSettings() {
@@ -130,13 +123,15 @@ public class Clock {
     }
 
     public String updateTime() {
-        DateTimeFormatter hourFormatter = null;
-        if (this.format.equalsIgnoreCase("24")) {
-            hourFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-        } else if (this.format.equalsIgnoreCase("12")) {
-            hourFormatter = DateTimeFormatter.ofPattern("hh-mm-ss-a");
-        }
+
+        //        if (this.format.equalsIgnoreCase("24")) {
+//        } else if (this.format.equalsIgnoreCase("12")) {
+//            hourFormatter = DateTimeFormatter.ofPattern("hh-mm-ss-a");
+//        }
 //        LocalTime currentTimeUtc = LocalTime.parse("13:24:25");
+
+
+        DateTimeFormatter hourFormatter = DateTimeFormatter.ofPattern(format);
         LocalTime currentTimeUtc = LocalTime.now(utc);
         String f = hourFormatter.format(currentTimeUtc);
 
