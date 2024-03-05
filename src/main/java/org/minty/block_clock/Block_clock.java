@@ -1,9 +1,9 @@
 package org.minty.block_clock;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -16,16 +16,17 @@ import org.minty.block_clock.clocks.GrandClock;
 import org.minty.block_clock.command.clockSpawner;
 import org.minty.block_clock.command.openInventory;
 import org.minty.block_clock.utils.IconMenu;
-import org.minty.block_clock.utils.inventGUI;
 
 public final class Block_clock extends JavaPlugin {
     Thread thread;
     public static Map<String, Clock> ClockMap = new HashMap<>();
+    public static Map<String, Boolean> clockEnableStatus = new HashMap<>();
     public static FileConfiguration mainConfig;
-
     public static File DataFolder;
     public static Set<GrandClock> grandClocks = new HashSet<>();
     public static IconMenu menu;
+//    public static
+
 
     @Override
     public void onEnable() {
@@ -34,18 +35,32 @@ public final class Block_clock extends JavaPlugin {
         getCommand("clock_settings").setExecutor(new openInventory());
 
 
-        getServer().getPluginManager().registerEvents(new inventGUI(),
-                this);
-
         METADATA.PLUGIN = this;
         DataFolder = getDataFolder();
         mainConfig = getConfig();
         {
-            menu = new IconMenu("Clocks settings", 54, new IconMenu.OptionClickEventHandler() {
+            menu = new IconMenu("SETTINGS", 54, new IconMenu.OptionClickEventHandler() {
                 @Override
                 public void onOptionClick(IconMenu.OptionClickEvent event) {
-                    event.getPlayer().sendMessage(event.getName());
-                    event.setWillClose(true);
+                    Player player = event.getPlayer();
+                    if (event.getName().equalsIgnoreCase("SETTINGS")) {
+                    } else {
+
+
+                        IconMenu clockIcon = createClockMenu(event);
+
+//                        event.setWillClose(true);
+                        Bukkit.getScheduler().scheduleSyncDelayedTask(METADATA.PLUGIN, new Runnable() {
+                            public void run() {
+                                clockIcon.open(player);
+                            }
+                        }, 2);
+//путем жеских вычислений и тестов я выяснил что если здесь не 2 то оно не откроется
+
+
+
+
+                    }
                 }
             }, this).setOption(4, new ItemStack(Material.COMMAND_BLOCK, 1), "SETTINGS", "");
 
@@ -61,6 +76,35 @@ public final class Block_clock extends JavaPlugin {
 
     }
 
+    private IconMenu createClockMenu(IconMenu.OptionClickEvent mainEvent) {
+        Clock clock = ClockMap.get(mainEvent.getName());
+        boolean enable = clockEnableStatus.get(mainEvent.getName());
+
+        IconMenu icon = new IconMenu(mainEvent.getName(), 54, new IconMenu.OptionClickEventHandler() {
+            @Override
+            public void onOptionClick(IconMenu.OptionClickEvent event) {
+                Player player = event.getPlayer();
+                //todo не открывается инвентарь, а точнее открывается на 0.1 секунды
+                if (event.getName().equalsIgnoreCase("ENABLE STATUS")) {
+                    player.sendMessage("status:" + enable);
+                }
+
+
+            }
+        }, this);
+
+        if (enable) {
+            icon.setOption(10, new ItemStack(Material.GREEN_CONCRETE, 1), "ENABLE STATUS", String.valueOf(enable));
+
+        } else {
+            icon.setOption(10, new ItemStack(Material.RED_CONCRETE, 1), "ENABLE STATUS", String.valueOf(enable));
+
+
+        }
+        return icon;
+
+    }
+
 
     @Override
     public void onDisable() {
@@ -73,7 +117,7 @@ public final class Block_clock extends JavaPlugin {
 
 
     private void initClock() {
-        int i = 9;
+        int i = 10;
         ConfigurationSection clocksSection = mainConfig.getConfigurationSection("clocks");
         if (clocksSection != null) {
             Set<String> clocks = clocksSection.getKeys(false);
@@ -91,8 +135,10 @@ public final class Block_clock extends JavaPlugin {
                 if (enabled) {
                     Clock clock = new Clock(name);
                     clock.loadConfig();
-
                 }
+                clockEnableStatus.put(name, enabled);
+
+
             }
         }
     }

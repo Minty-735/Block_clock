@@ -80,7 +80,7 @@ public class GrandClock {
     public void removeBlocks() {
         for (Location[] loc : matrix) {
             for (Location locBlock : loc) {
-                locBlock.getBlock().setType(Material.AIR);
+                if (locBlock != null) locBlock.getBlock().setType(Material.AIR);
             }
         }
     }

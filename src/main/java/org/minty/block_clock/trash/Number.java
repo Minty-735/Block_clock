@@ -15,8 +15,6 @@ public class Number {
             @Override
             public void onOptionClick(IconMenu.OptionClickEvent event) {
 
-//                event.getPlayer().sendMessage("You have chosen " + event.getName());
-
 
                 event.setWillClose(true);
             }
