@@ -62,9 +62,15 @@ public class GrandClock {
 
                 Block blk = loc.getBlock();
                 if (pixel == '*') {
-                    blk.setType(white);
+                    if (blk.getType() != white) {
+                        blk.setType(white);
+                    }
                 } else {
-                    blk.setType(black);
+
+                    if (blk.getType() != black) {
+                        blk.setType(black);
+                    }
+//                    blk.setType(black);
                 }
             }
         }
@@ -88,7 +94,6 @@ public class GrandClock {
         int z1 = (int) loc1.getZ();
         int y1 = (int) loc1.getY();
 
-        //todo
         //чекнуть что будет если числа отрицательные (а точнее где ошибка)
         int x2 = (int) loc2.getX();
         int z2 = (int) loc2.getZ();
@@ -98,7 +103,6 @@ public class GrandClock {
         Location[][] result;
         ArrayList<Integer> test = drawLine(x1, z1, x2 + x1, z2 + z1);
 
-//todo ПРОВЕРИТЬ!!!!!! нижнюю строчку
         int len = test.size();
         result = new Location[len][height];
 
