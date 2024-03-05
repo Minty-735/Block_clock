@@ -1,8 +1,10 @@
 package org.minty.block_clock;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -13,6 +15,7 @@ import org.minty.block_clock.clocks.Clock;
 import org.minty.block_clock.clocks.GrandClock;
 import org.minty.block_clock.command.clockSpawner;
 import org.minty.block_clock.command.openInventory;
+import org.minty.block_clock.utils.IconMenu;
 import org.minty.block_clock.utils.inventGUI;
 
 public final class Block_clock extends JavaPlugin {
@@ -22,6 +25,7 @@ public final class Block_clock extends JavaPlugin {
 
     public static File DataFolder;
     public static Set<GrandClock> grandClocks = new HashSet<>();
+    public static IconMenu menu;
 
     @Override
     public void onEnable() {
@@ -36,7 +40,17 @@ public final class Block_clock extends JavaPlugin {
         METADATA.PLUGIN = this;
         DataFolder = getDataFolder();
         mainConfig = getConfig();
+        {
+            menu = new IconMenu("Clocks settings", 54, new IconMenu.OptionClickEventHandler() {
+                @Override
+                public void onOptionClick(IconMenu.OptionClickEvent event) {
+                    event.getPlayer().sendMessage(event.getName());
+                    event.setWillClose(true);
+                }
+            }, this).setOption(4, new ItemStack(Material.COMMAND_BLOCK, 1), "SETTINGS", "");
 
+
+        }
         saveDefaultConfig();
         initClock();
 
@@ -51,22 +65,33 @@ public final class Block_clock extends JavaPlugin {
     @Override
     public void onDisable() {
         thread.interrupt();
- 	           
-        for (GrandClock clock : grandClocks){
+
+        for (GrandClock clock : grandClocks) {
             clock.removeBlocks();
         }
     }
 
 
     private void initClock() {
+        int i = 9;
         ConfigurationSection clocksSection = mainConfig.getConfigurationSection("clocks");
         if (clocksSection != null) {
             Set<String> clocks = clocksSection.getKeys(false);
             for (String name : clocks) {
+
+                menu.setOption(i, new ItemStack(Material.CLOCK, 1), name, "");
+                i++;
+                if (i % 9 == 8) {
+                    i++;
+                    i++;
+                }
+
+
                 boolean enabled = clocksSection.getBoolean(name);
                 if (enabled) {
                     Clock clock = new Clock(name);
                     clock.loadConfig();
+
                 }
             }
         }
