@@ -27,6 +27,12 @@ public class GrandClock {
     }
 
 
+    public void remove() {
+
+        grandClocks.remove(this);
+
+    }
+
     public void UpdateTime() {
         String time = clock.updateTime();
         Location loc1 = clock.getStartLocation();

@@ -48,6 +48,7 @@ public class Clock {
     }
 
     private File customConfigFile;
+    private GrandClock grandClock;
 
     public void build(Location startLocation, Location endlocation) {
 
@@ -61,7 +62,7 @@ public class Clock {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        new GrandClock(this);
+        grandClock = new GrandClock(this);
 
     }
 
@@ -120,6 +121,12 @@ public class Clock {
 
         customConfig.save(customConfigFile);
 
+    }
+
+    public void remove() {
+
+        ClockMap.remove(name, this);
+        grandClock.remove();
     }
 
     public String updateTime() {

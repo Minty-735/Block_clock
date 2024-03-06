@@ -7,6 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.minty.block_clock.clocks.Clock;
 
 public class clockSpawner implements CommandExecutor {
@@ -34,11 +35,8 @@ public class clockSpawner implements CommandExecutor {
 //                break;
 //            }
 //        }
-
-
         Location loc1 = new Location(world, Double.parseDouble(args[0]), Double.parseDouble(args[1]), Double.parseDouble(args[2]));
         Location loc2 = new Location(world, Double.parseDouble(args[3]), Double.parseDouble(args[4]), Double.parseDouble(args[5]));
-
 
         String name = args[6];
 

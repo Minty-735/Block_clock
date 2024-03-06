@@ -55,9 +55,8 @@ public final class Block_clock extends JavaPlugin {
                                 clockIcon.open(player);
                             }
                         }, 2);
+
 //путем жеских вычислений и тестов я выяснил что если здесь не 2 то оно не откроется
-
-
 
 
                     }
@@ -83,23 +82,26 @@ public final class Block_clock extends JavaPlugin {
         IconMenu icon = new IconMenu(mainEvent.getName(), 54, new IconMenu.OptionClickEventHandler() {
             @Override
             public void onOptionClick(IconMenu.OptionClickEvent event) {
+
+                String name = event.getName();
                 Player player = event.getPlayer();
-                //todo не открывается инвентарь, а точнее открывается на 0.1 секунды
-                if (event.getName().equalsIgnoreCase("ENABLE STATUS")) {
-                    player.sendMessage("status:" + enable);
+                //todo не меняется состояние часов
+                if (name.equalsIgnoreCase("ENABLE STATUS")) {
+                    if (enable) {
+                        clock.remove();
+                    } else {
+                        Clock clock1 = new Clock(name);
+                        clock1.loadConfig();
+                    }
+                    Reload();
                 }
-
-
             }
         }, this);
 
         if (enable) {
-            icon.setOption(10, new ItemStack(Material.GREEN_CONCRETE, 1), "ENABLE STATUS", String.valueOf(enable));
-
+            icon.setOption(10, new ItemStack(Material.GREEN_CONCRETE, 1), "ENABLE STATUS", String.valueOf(enable), "Click to change status");
         } else {
-            icon.setOption(10, new ItemStack(Material.RED_CONCRETE, 1), "ENABLE STATUS", String.valueOf(enable));
-
-
+            icon.setOption(10, new ItemStack(Material.RED_CONCRETE, 1), "ENABLE STATUS", String.valueOf(enable), "Click to change status");
         }
         return icon;
 
@@ -109,7 +111,6 @@ public final class Block_clock extends JavaPlugin {
     @Override
     public void onDisable() {
         thread.interrupt();
-
         for (GrandClock clock : grandClocks) {
             clock.removeBlocks();
         }
@@ -142,7 +143,16 @@ public final class Block_clock extends JavaPlugin {
             }
         }
     }
+
+
+    public void Reload(){
+        onDisable();
+        onEnable();
+    }
+
+
 }
+
 
 
 class CustomRunnable implements java.lang.Runnable {
