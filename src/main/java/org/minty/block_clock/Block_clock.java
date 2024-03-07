@@ -15,7 +15,10 @@ import org.minty.block_clock.clocks.Clock;
 import org.minty.block_clock.clocks.GrandClock;
 import org.minty.block_clock.command.clockSpawner;
 import org.minty.block_clock.command.openInventory;
+import org.minty.block_clock.listeners.click;
 import org.minty.block_clock.utils.IconMenu;
+
+import static org.minty.block_clock.listeners.click.replyMessage;
 
 public final class Block_clock extends JavaPlugin {
     Thread thread;
@@ -25,6 +28,7 @@ public final class Block_clock extends JavaPlugin {
     public static File DataFolder;
     public static Set<GrandClock> grandClocks = new HashSet<>();
     public static IconMenu menu;
+    public static Player waitingForReply = null;
 //    public static
 
 
@@ -33,6 +37,7 @@ public final class Block_clock extends JavaPlugin {
 
         getCommand("clock").setExecutor(new clockSpawner());
         getCommand("clock_settings").setExecutor(new openInventory());
+        getServer().getPluginManager().registerEvents(new click(), this);
 
 
         METADATA.PLUGIN = this;
@@ -45,7 +50,6 @@ public final class Block_clock extends JavaPlugin {
                     Player player = event.getPlayer();
                     if (event.getName().equalsIgnoreCase("SETTINGS")) {
                     } else {
-
 
                         IconMenu clockIcon = createClockMenu(event);
 
@@ -86,6 +90,7 @@ public final class Block_clock extends JavaPlugin {
                 String name = event.getName();
                 Player player = event.getPlayer();
                 //todo не меняется состояние часов
+                // мб он не создает новое меню каждый раз
                 if (name.equalsIgnoreCase("ENABLE STATUS")) {
                     if (enable) {
                         clock.remove();
@@ -93,16 +98,24 @@ public final class Block_clock extends JavaPlugin {
                         Clock clock1 = new Clock(name);
                         clock1.loadConfig();
                     }
-                    Reload();
+
+                    player.sendMessage("waiting answer");
+                    waitingForReply = player;
+                    player.sendMessage(replyMessage);
+                    Reload();//хз как рабтоает и работает ли вообще
                 }
             }
         }, this);
+
 
         if (enable) {
             icon.setOption(10, new ItemStack(Material.GREEN_CONCRETE, 1), "ENABLE STATUS", String.valueOf(enable), "Click to change status");
         } else {
             icon.setOption(10, new ItemStack(Material.RED_CONCRETE, 1), "ENABLE STATUS", String.valueOf(enable), "Click to change status");
         }
+//        icon.setOption();
+
+
         return icon;
 
     }
@@ -145,14 +158,13 @@ public final class Block_clock extends JavaPlugin {
     }
 
 
-    public void Reload(){
-        onDisable();
-        onEnable();
+    public void Reload() {
+        METADATA.PLUGIN.onDisable();
+        METADATA.PLUGIN.onEnable();
     }
 
 
 }
-
 
 
 class CustomRunnable implements java.lang.Runnable {

@@ -28,55 +28,59 @@ public class GrandClock {
 
 
     public void remove() {
-
+        this.clock = null;
         grandClocks.remove(this);
 
     }
 
     public void UpdateTime() {
-        String time = clock.updateTime();
-        Location loc1 = clock.getStartLocation();
-        Location loc2 = clock.getEndlocation();
-
-        int x2 = loc2.getBlockX();
-        int y2 = loc2.getBlockY();
-
-        int horiz = Math.abs(x2);
-
-        int vert = y2;
-        char[][] chats;
-
-        //chats[ВЫСОТА][ШИРИНА]
-        chats = PainterApplication.calc(time, horiz, vert);
-
-        chats = reverseArray(chats);
+        if (clock != null) {
 
 
-        Material black = clock.getTextBlock();
-        Material white = clock.getBackgroundBlock();
+            String time = clock.updateTime();
+            Location loc1 = clock.getStartLocation();
+            Location loc2 = clock.getEndlocation();
+
+            int x2 = loc2.getBlockX();
+            int y2 = loc2.getBlockY();
+
+            int horiz = Math.abs(x2);
+
+            int vert = y2;
+            char[][] chats;
+
+            //chats[ВЫСОТА][ШИРИНА]
+            chats = PainterApplication.calc(time, horiz, vert);
+
+            chats = reverseArray(chats);
+
+
+            Material black = clock.getTextBlock();
+            Material white = clock.getBackgroundBlock();
 
 //        Location[][] matrix =
-        this.matrix = createMatrix(loc1, loc2);
+            this.matrix = createMatrix(loc1, loc2);
 
 
-        for (int y = 0; y < chats.length; y++) {
-            for (int x = 0; x < chats[0].length; x++) {
-                char pixel = chats[y][x];
-                //chats[ВЫСОТА][ШИРИНА]
+            for (int y = 0; y < chats.length; y++) {
+                for (int x = 0; x < chats[0].length; x++) {
+                    char pixel = chats[y][x];
+                    //chats[ВЫСОТА][ШИРИНА]
 
-                Location loc = matrix[x * 2][y];
+                    Location loc = matrix[x * 2][y];
 
-                Block blk = loc.getBlock();
-                if (pixel == '*') {
-                    if (blk.getType() != white) {
-                        blk.setType(white);
-                    }
-                } else {
+                    Block blk = loc.getBlock();
+                    if (pixel == '*') {
+                        if (blk.getType() != white) {
+                            blk.setType(white);
+                        }
+                    } else {
 
-                    if (blk.getType() != black) {
-                        blk.setType(black);
-                    }
+                        if (blk.getType() != black) {
+                            blk.setType(black);
+                        }
 //                    blk.setType(black);
+                    }
                 }
             }
         }

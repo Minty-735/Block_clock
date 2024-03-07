@@ -127,6 +127,7 @@ public class Clock {
 
         ClockMap.remove(name, this);
         grandClock.remove();
+
     }
 
     public String updateTime() {
