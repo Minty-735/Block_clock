@@ -1,4 +1,4 @@
-package org.minty.block_clock;
+package org.minty.block_clock.utils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

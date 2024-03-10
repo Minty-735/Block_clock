@@ -1,4 +1,4 @@
- package org.minty.block_clock.trash;
+ package org.minty.block_clock.utils;
 
  import java.util.ArrayList;
 

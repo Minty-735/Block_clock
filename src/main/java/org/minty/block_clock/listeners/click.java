@@ -18,9 +18,10 @@ public class click implements Listener {
         if (waitingForReply != null && player == waitingForReply) {
             //todo здесь надо потестить
             replyMessage = message;
-
+//            System.out.println("message = " + message);
+            player.sendMessage("message = " + message);
             waitingForReply = null;
+            event.setCancelled(true);
         }
-        event.setCancelled(true);
     }
 }

@@ -29,12 +29,7 @@ public class clockSpawner implements CommandExecutor {
         else {
             return false;
         }
-//        else {
-//            for (Player p : Bukkit.getOnlinePlayers()) {
-//                world = p.getWorld();
-//                break;
-//            }
-//        }
+
         Location loc1 = new Location(world, Double.parseDouble(args[0]), Double.parseDouble(args[1]), Double.parseDouble(args[2]));
         Location loc2 = new Location(world, Double.parseDouble(args[3]), Double.parseDouble(args[4]), Double.parseDouble(args[5]));
 
@@ -42,12 +37,7 @@ public class clockSpawner implements CommandExecutor {
 
         Clock clock = new Clock(name);
 
-
         clock.build(loc1, loc2);
-
-
-
-
         return true;
     }
 }
