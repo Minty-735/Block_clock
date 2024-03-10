@@ -23,7 +23,6 @@ public class GrandClock {
     public GrandClock(Clock clock) {
         this.clock = clock;
         grandClocks.add(this);
-
     }
 
 
@@ -34,10 +33,9 @@ public class GrandClock {
     }
 
     public void UpdateTime() {
+
         if (clock != null) {
-
-
-            String time = clock.updateTime();
+            String time = clock.getTime();
             Location loc1 = clock.getStartLocation();
             Location loc2 = clock.getEndlocation();
 

@@ -2,8 +2,10 @@ package org.minty.block_clock.clocks;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.minty.block_clock.PainterApplication;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,6 +51,9 @@ public class Clock {
 
     private File customConfigFile;
     private GrandClock grandClock;
+
+
+
 
     public void build(Location startLocation, Location endlocation) {
 
@@ -124,29 +129,76 @@ public class Clock {
     }
 
     public void remove() {
-
+	/*
+	this.all = null;
+	*/
+//        this.name = null;
+//        this.grandClock = null;
+//        this.startLocation = null;
+//        this.endlocation = null;
         ClockMap.remove(name, this);
         grandClock.remove();
 
     }
 
-    public String updateTime() {
-
-        //        if (this.format.equalsIgnoreCase("24")) {
-//        } else if (this.format.equalsIgnoreCase("12")) {
-//            hourFormatter = DateTimeFormatter.ofPattern("hh-mm-ss-a");
-//        }
-//        LocalTime currentTimeUtc = LocalTime.parse("13:24:25");
-
-
+    private String getTime() {
         DateTimeFormatter hourFormatter = DateTimeFormatter.ofPattern(format);
         LocalTime currentTimeUtc = LocalTime.now(utc);
         String f = hourFormatter.format(currentTimeUtc);
-
         return f;
-
-
     }
+
+
+    public void UpdateTime() {
+
+            String time = this.getTime();
+            Location loc1 = this.getStartLocation();
+            Location loc2 = this.getEndlocation();
+
+            int x2 = loc2.getBlockX();
+            int y2 = loc2.getBlockY();
+
+            int horiz = Math.abs(x2);
+
+            int vert = y2;
+            char[][] chats;
+
+            //chats[ВЫСОТА][ШИРИНА]
+            chats = PainterApplication.calc(time, horiz, vert);
+//todo додеоать перенос всего в 1 класс
+            chats = reverseArray(chats);
+
+
+            Material black = this.getTextBlock();
+            Material white = this.getBackgroundBlock();
+
+//        Location[][] matrix =
+            this.matrix = createMatrix(loc1, loc2);
+
+
+            for (int y = 0; y < chats.length; y++) {
+                for (int x = 0; x < chats[0].length; x++) {
+                    char pixel = chats[y][x];
+                    //chats[ВЫСОТА][ШИРИНА]
+
+                    Location loc = matrix[x * 2][y];
+
+                    Block blk = loc.getBlock();
+                    if (pixel == '*') {
+                        if (blk.getType() != white) {
+                            blk.setType(white);
+                        }
+                    } else {
+
+                        if (blk.getType() != black) {
+                            blk.setType(black);
+                        }
+//                    blk.setType(black);
+                    }
+                }
+            }
+    }
+
 
 
 }

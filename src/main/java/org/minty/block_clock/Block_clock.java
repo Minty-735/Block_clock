@@ -48,12 +48,10 @@ public final class Block_clock extends JavaPlugin {
                 @Override
                 public void onOptionClick(IconMenu.OptionClickEvent event) {
                     Player player = event.getPlayer();
-                    if (event.getName().equalsIgnoreCase("SETTINGS")) {
-                    } else {
+                    if (event.getName().equalsIgnoreCase("SETTINGS")) {} else {
 
                         IconMenu clockIcon = createClockMenu(event);
 
-//                        event.setWillClose(true);
                         Bukkit.getScheduler().scheduleSyncDelayedTask(METADATA.PLUGIN, new Runnable() {
                             public void run() {
                                 clockIcon.open(player);
@@ -92,13 +90,22 @@ public final class Block_clock extends JavaPlugin {
                 //todo не меняется состояние часов
                 // мб он не создает новое меню каждый раз
                 if (name.equalsIgnoreCase("ENABLE STATUS")) {
+                    player.sendMessage(String.valueOf(enable));
+
                     if (enable) {
+
+                        System.out.println("ClockMap: "+ClockMap);
+                        System.out.println("grandClocks: "+grandClocks);
+                        System.out.println("clock"+clock);
+
                         clock.remove();
+
+                        System.out.println(ClockMap);
+
                     } else {
                         Clock clock1 = new Clock(name);
                         clock1.loadConfig();
                     }
-
                     player.sendMessage("waiting answer");
                     waitingForReply = player;
                     player.sendMessage(replyMessage);
@@ -144,14 +151,12 @@ public final class Block_clock extends JavaPlugin {
                     i++;
                 }
 
-
                 boolean enabled = clocksSection.getBoolean(name);
                 if (enabled) {
                     Clock clock = new Clock(name);
                     clock.loadConfig();
                 }
                 clockEnableStatus.put(name, enabled);
-
 
             }
         }
