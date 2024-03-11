@@ -22,7 +22,6 @@ public class click implements Listener {
         if (waitingForReply != null && player == waitingForReply) {
             if (message.equalsIgnoreCase("cansel")) {
             } else {
-                //todo здесь надо потестить
                 replyMessage = message;
 //            System.out.println("message = " + message);
 

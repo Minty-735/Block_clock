@@ -212,7 +212,6 @@ public final class Block_clock extends JavaPlugin {
     public static void customLogger(String message) {
         METADATA.PLUGIN.getLogger().info("----------------------------->" + message + "<-----------------------------");
     }
-//todo check https://habr.com/ru/articles/649363/
 }
 
 
