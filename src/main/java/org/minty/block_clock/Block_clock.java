@@ -71,7 +71,7 @@ public final class Block_clock extends JavaPlugin {
 
                     }
                 }
-            }, this).setOption(4, new ItemStack(Material.COMMAND_BLOCK, 1), "SETTINGS", "");
+            }, this).setOption(4, new ItemStack(Material.COMMAND_BLOCK, 1), "SETTINGS").setOption(49,new ItemStack(Material.BARRIER,1),"Close menu");
         }
         saveDefaultConfig();
         initClock();
@@ -191,7 +191,7 @@ public final class Block_clock extends JavaPlugin {
             for (String name : clocks) {
                 Clock clock = Clock.getInstance(name);
 
-                menu.setOption(i, new ItemStack(Material.CLOCK, 1), name, "");
+                menu.setOption(i, new ItemStack(Material.CLOCK, 1), name);
                 i++;
                 if (i % 9 == 8) {
                     i++;
