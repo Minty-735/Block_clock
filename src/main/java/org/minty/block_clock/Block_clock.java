@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -20,17 +21,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static org.minty.block_clock.listeners.click.replyMessage;
-
 public final class Block_clock extends JavaPlugin {
     Thread thread;
     public static Map<String, Clock> ClockMap = new HashMap<>();
     public static Map<String, Boolean> clockEnableStatus = new HashMap<>();
     public static FileConfiguration mainConfig;
     public static File DataFolder;
+    public static File clocksFolder;
     public static IconMenu menu;
     public static Player waitingForReply = null;
-//    public static
+    public static Clock clockForReply = null;
+
+    public static String methodForReply = null;
 
 
     @Override
@@ -38,13 +40,18 @@ public final class Block_clock extends JavaPlugin {
         getLogger().info("Start enabling plugin");
         getCommand("clock").setExecutor(new clockSpawner());
         getCommand("clock_settings").setExecutor(new openInventory());
-        getCommand("clock_reboot").setExecutor(new clockReboot());
+//        getCommand("clock_reboot").setExecutor(new clockReboot());
         getServer().getPluginManager().registerEvents(new click(), this);
 
 
         METADATA.PLUGIN = this;
         DataFolder = getDataFolder();
+        clocksFolder = new File(DataFolder, "clocks");
+        if (!clocksFolder.exists()) {
+            clocksFolder.mkdirs();
+        }
 
+        mainConfig = getConfig();
         {
             menu = new IconMenu("SETTINGS", 54, new IconMenu.OptionClickEventHandler() {
                 @Override
@@ -65,8 +72,6 @@ public final class Block_clock extends JavaPlugin {
                     }
                 }
             }, this).setOption(4, new ItemStack(Material.COMMAND_BLOCK, 1), "SETTINGS", "");
-
-
         }
         saveDefaultConfig();
         initClock();
@@ -79,11 +84,18 @@ public final class Block_clock extends JavaPlugin {
     }
 
     private IconMenu createClockMenu(IconMenu.OptionClickEvent mainEvent) {
+
         Clock clock = Clock.getInstance(mainEvent.getName());
 
         boolean enable = clock.isEnableStatus();
 
         boolean finalEnable = enable;
+        if (!enable) {
+            clock.loadConfig();
+            clock.setEnableStatus(false);
+
+        }
+
         Clock finalClock = clock;
 
         IconMenu icon = new IconMenu(mainEvent.getName(), 54, new IconMenu.OptionClickEventHandler() {
@@ -110,15 +122,30 @@ public final class Block_clock extends JavaPlugin {
                             throw new RuntimeException(e);
                         }
                     } else {
-                        Clock clock1 = Clock.getInstance(name);
-                        clock1.loadConfig();
+                        finalClock.loadConfig();
                     }
-                    customLogger(name);
+//                    customLogger(name);
                     initClock();
                 }
+                if (name.equalsIgnoreCase("Clock name")) {
+                }
+                if (name.equalsIgnoreCase("Time Format")) {
+                    waitingForReply = player;
+                    clockForReply = clock;
+                    methodForReply = "setFormat";
+
+                }
+                if (name.equalsIgnoreCase("UTC")) {
+                    waitingForReply = player;
+                    clockForReply = clock;
+                    methodForReply = "setUtc";
+                }
+
+                event.setWillClose(true);
+
             }
         }, this);
-        icon.setOption(49, new ItemStack(Material.CLOCK, 1), "MENU", "Back to main menu");
+        icon.setOption(49, new ItemStack(Material.COMMAND_BLOCK, 1), "MENU", "Back to main menu");
 
         if (enable) {
             icon.setOption(10, new ItemStack(Material.GREEN_CONCRETE, 1), "ENABLE STATUS", String.valueOf(enable), "Click to change status");
@@ -126,13 +153,12 @@ public final class Block_clock extends JavaPlugin {
             icon.setOption(10, new ItemStack(Material.RED_CONCRETE, 1), "ENABLE STATUS", String.valueOf(enable), "Click to change status");
         }
 
-        icon.setOption(11, new ItemStack(Material.BIRCH_SIGN, 1), clock.getName(), "Clock name");
-        icon.setOption(12, new ItemStack(Material.BIRCH_SIGN, 1), clock.getUtc().toString(), "UTC");
-        icon.setOption(13, new ItemStack(Material.BIRCH_SIGN, 1), clock.getFormat(), "Time Format");
+        icon.setOption(4, new ItemStack(Material.CLOCK, 1),  "Clock name",clock.getName());
+        icon.setOption(11, new ItemStack(Material.BIRCH_SIGN, 1),  "UTC",clock.getUtc().toString(),"click to change","write in chat");
+        icon.setOption(12, new ItemStack(Material.BIRCH_SIGN, 1),  "Time Format",clock.getFormat(),"click to change","write in chat");
 
 
         return icon;
-
     }
 
 
@@ -147,13 +173,19 @@ public final class Block_clock extends JavaPlugin {
     }
 
 
-    private void initClock() {
-        for (Clock clock: ClockMap.values()){
+    public static void initClock() {
+        for (Clock clock : ClockMap.values()) {
             clock.removeBlocks();
         }
+        ClockMap.clear();
+
+        File mainCFG = new File(DataFolder, "clocks.yml");
+
+        FileConfiguration customConfig;
+        customConfig = YamlConfiguration.loadConfiguration(mainCFG);
 
         int i = 10;
-        ConfigurationSection clocksSection = getConfig().getConfigurationSection("clocks");
+        ConfigurationSection clocksSection = customConfig.getConfigurationSection("clocks");
         if (clocksSection != null) {
             Set<String> clocks = clocksSection.getKeys(false);
             for (String name : clocks) {
@@ -174,12 +206,6 @@ public final class Block_clock extends JavaPlugin {
 
             }
         }
-    }
-
-
-    public void reloadPlugin() {
-        METADATA.PLUGIN.onDisable();
-        METADATA.PLUGIN.onEnable();
     }
 
 

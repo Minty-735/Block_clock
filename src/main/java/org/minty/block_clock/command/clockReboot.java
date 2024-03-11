@@ -8,12 +8,13 @@ import org.bukkit.plugin.Plugin;
 import org.minty.block_clock.Block_clock;
 import org.minty.block_clock.METADATA;
 
+import static org.minty.block_clock.Block_clock.initClock;
+
 public class clockReboot implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        Plugin plugin = Bukkit.getPluginManager().getPlugin("Block_clock");
-        Bukkit.getPluginManager().disablePlugin(plugin);
-        Bukkit.getPluginManager().enablePlugin(plugin);
+
+        initClock();
         return false;
     }
 }

@@ -41,6 +41,15 @@ public class Clock {
         return ClockMap.get(name);
     }
 
+    public void setFormat(String format) {
+        this.format = format;
+    }
+
+    public void setUtc(String utc) {
+
+        this.utc = ZoneId.of( utc);
+    }
+
     public Location getStartLocation() {
         return startLocation;
     }
@@ -61,6 +70,10 @@ public class Clock {
 
     public boolean isEnableStatus() {
         return enableStatus;
+    }
+
+    public void setEnableStatus(boolean enableStatus) {
+        this.enableStatus = enableStatus;
     }
 
     private String name;
@@ -108,7 +121,7 @@ public class Clock {
     }
 
     public void loadConfig() {
-        customConfigFile = new File(DataFolder, name + ".yml");
+        customConfigFile = new File(clocksFolder, name + ".yml");
         FileConfiguration customConfig;
         customConfig = YamlConfiguration.loadConfiguration(customConfigFile);
         startLocation = customConfig.getLocation("FirstLoc");
@@ -144,7 +157,7 @@ public class Clock {
     }
 
     public void addToMainConfig(boolean state) throws IOException {
-        File mainCFG = new File(DataFolder, "config.yml");
+        File mainCFG = new File(DataFolder, "clocks.yml");
         FileConfiguration customConfig;
         customConfig = YamlConfiguration.loadConfiguration(mainCFG);
         customConfig.set("clocks." + name, state);
@@ -152,8 +165,8 @@ public class Clock {
 
     }
 
-    private void saveCustomConfig() throws IOException {
-        customConfigFile = new File(DataFolder, name + ".yml");
+    public void saveCustomConfig() throws IOException {
+        customConfigFile = new File(clocksFolder, name + ".yml");
         FileConfiguration customConfig;
         customConfig = YamlConfiguration.loadConfiguration(customConfigFile);
 
