@@ -4,3 +4,4 @@ settings:
   format: "HH:mm:ss"
   textBlock: OBSIDIAN
   backgroundBlock: GLASS
+  font: "Arial"

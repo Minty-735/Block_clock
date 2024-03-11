@@ -1,5 +1,7 @@
 package org.minty.block_clock.utils;
 
+import org.minty.block_clock.Block_clock;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -26,7 +28,7 @@ public class PainterApplication {
 
 
         // Устанавливаем шрифт
-        Font font = new Font("Arial", Font.PLAIN, 48);
+        Font font = new Font(Block_clock.font, Font.PLAIN, 48);
         tempG2d.setFont(font);
 
         // Получаем метрики шрифта

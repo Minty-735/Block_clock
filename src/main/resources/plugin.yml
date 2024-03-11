@@ -12,4 +12,3 @@ commands:
   clock_settings:
     permission: clock.changing, clock.admin
     permission-message: "u have not permission"
-

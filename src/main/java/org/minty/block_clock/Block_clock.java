@@ -33,7 +33,7 @@ public final class Block_clock extends JavaPlugin {
     public static Clock clockForReply = null;
 
     public static String methodForReply = null;
-
+    public static String font;
 
     @Override
     public void onEnable() {
@@ -51,7 +51,7 @@ public final class Block_clock extends JavaPlugin {
             clocksFolder.mkdirs();
         }
 
-        mainConfig = getConfig();
+
         {
             menu = new IconMenu("SETTINGS", 54, new IconMenu.OptionClickEventHandler() {
                 @Override
@@ -71,9 +71,11 @@ public final class Block_clock extends JavaPlugin {
 
                     }
                 }
-            }, this).setOption(4, new ItemStack(Material.COMMAND_BLOCK, 1), "SETTINGS").setOption(49,new ItemStack(Material.BARRIER,1),"Close menu");
+            }, this).setOption(4, new ItemStack(Material.COMMAND_BLOCK, 1), "SETTINGS").setOption(49, new ItemStack(Material.BARRIER, 1), "Close menu");
         }
         saveDefaultConfig();
+        mainConfig = getConfig();
+        font = mainConfig.getString("font");
         initClock();
 
         Runnable myRunnable = new CustomRunnable();
@@ -153,9 +155,9 @@ public final class Block_clock extends JavaPlugin {
             icon.setOption(10, new ItemStack(Material.RED_CONCRETE, 1), "ENABLE STATUS", String.valueOf(enable), "Click to change status");
         }
 
-        icon.setOption(4, new ItemStack(Material.CLOCK, 1),  "Clock name",clock.getName());
-        icon.setOption(11, new ItemStack(Material.BIRCH_SIGN, 1),  "UTC",clock.getUtc().toString(),"click to change","write in chat");
-        icon.setOption(12, new ItemStack(Material.BIRCH_SIGN, 1),  "Time Format",clock.getFormat(),"click to change","write in chat");
+        icon.setOption(4, new ItemStack(Material.CLOCK, 1), "Clock name", clock.getName());
+        icon.setOption(11, new ItemStack(Material.BIRCH_SIGN, 1), "UTC", clock.getUtc().toString(), "click to change", "write in chat");
+        icon.setOption(12, new ItemStack(Material.BIRCH_SIGN, 1), "Time Format", clock.getFormat(), "click to change", "write in chat");
 
 
         return icon;

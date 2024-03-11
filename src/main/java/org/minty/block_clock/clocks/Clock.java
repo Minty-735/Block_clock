@@ -25,15 +25,6 @@ public class Clock {
         this.enableStatus = false;
     }
 
-
-//    public Clock(String name) {
-//
-//        this.name = name;
-//        this.enableStatus = false;
-//        ClockMap.put(name, this);
-//
-//    }
-
     public static Clock getInstance(String name) {
         if (!ClockMap.containsKey(name)) {
             ClockMap.put(name, new Clock(name));
