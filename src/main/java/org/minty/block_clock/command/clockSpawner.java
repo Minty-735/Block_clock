@@ -1,26 +1,15 @@
 package org.minty.block_clock.command;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.minty.block_clock.clocks.Clock;
 
 public class clockSpawner implements CommandExecutor {
     @Override
-/**
- *
- /clock {startloc} {endloc} {name} {format -||- ->} {UTC - по желанию, будет дефолт конфиг} {block - по желанию, будет дефолт конфиг}
- понятно как-бы
- тоже подумать как сделать, обязателен ли вообще этот параметр и как парсить все твердые блоки майнкрафта
- формат? Надо подумать надо ли? 12/24
- надо ли координаты начала
- */
-
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
         World world;
         if (sender instanceof Player player) {
@@ -35,7 +24,7 @@ public class clockSpawner implements CommandExecutor {
 
         String name = args[6];
 
-        Clock clock = new Clock(name);
+        Clock clock = Clock.getInstance(name);
 
         clock.build(loc1, loc2);
         return true;

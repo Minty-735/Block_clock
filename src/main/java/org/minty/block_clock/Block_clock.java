@@ -28,7 +28,6 @@ public final class Block_clock extends JavaPlugin {
     public static Map<String, Boolean> clockEnableStatus = new HashMap<>();
     public static FileConfiguration mainConfig;
     public static File DataFolder;
-    //    public static Set<GrandClock> grandClocks = new HashSet<>();
     public static IconMenu menu;
     public static Player waitingForReply = null;
 //    public static
@@ -62,8 +61,6 @@ public final class Block_clock extends JavaPlugin {
                             }
                         }, 2);
 
-//путем жеских вычислений и тестов я выяснил что если здесь не 2 то оно не откроется
-
 
                     }
                 }
@@ -82,16 +79,13 @@ public final class Block_clock extends JavaPlugin {
     }
 
     private IconMenu createClockMenu(IconMenu.OptionClickEvent mainEvent) {
-        Clock clock = null;
-        boolean enable = false;
-        enable = clockEnableStatus.get(mainEvent.getName());
+        Clock clock = Clock.getInstance(mainEvent.getName());
 
-        if (enable) {
-            clock = ClockMap.get(mainEvent.getName());
-        }
+        boolean enable = clock.isEnableStatus();
 
         boolean finalEnable = enable;
         Clock finalClock = clock;
+
         IconMenu icon = new IconMenu(mainEvent.getName(), 54, new IconMenu.OptionClickEventHandler() {
             @Override
             public void onOptionClick(IconMenu.OptionClickEvent event) {
@@ -105,9 +99,6 @@ public final class Block_clock extends JavaPlugin {
                             menu.open(player);
                         }
                     }, 2);
-
-
-
                 }
                 if (name.equalsIgnoreCase("ENABLE STATUS")) {
 
@@ -119,7 +110,7 @@ public final class Block_clock extends JavaPlugin {
                             throw new RuntimeException(e);
                         }
                     } else {
-                        Clock clock1 = new Clock(name);
+                        Clock clock1 = Clock.getInstance(name);
                         clock1.loadConfig();
                     }
                     customLogger(name);
@@ -135,8 +126,9 @@ public final class Block_clock extends JavaPlugin {
             icon.setOption(10, new ItemStack(Material.RED_CONCRETE, 1), "ENABLE STATUS", String.valueOf(enable), "Click to change status");
         }
 
-
-//        icon.setOption();
+        icon.setOption(11, new ItemStack(Material.BIRCH_SIGN, 1), clock.getName(), "Clock name");
+        icon.setOption(12, new ItemStack(Material.BIRCH_SIGN, 1), clock.getUtc().toString(), "UTC");
+        icon.setOption(13, new ItemStack(Material.BIRCH_SIGN, 1), clock.getFormat(), "Time Format");
 
 
         return icon;
@@ -156,12 +148,17 @@ public final class Block_clock extends JavaPlugin {
 
 
     private void initClock() {
-        clockEnableStatus.clear();
+        for (Clock clock: ClockMap.values()){
+            clock.removeBlocks();
+        }
+
         int i = 10;
         ConfigurationSection clocksSection = getConfig().getConfigurationSection("clocks");
         if (clocksSection != null) {
             Set<String> clocks = clocksSection.getKeys(false);
             for (String name : clocks) {
+                Clock clock = Clock.getInstance(name);
+
                 menu.setOption(i, new ItemStack(Material.CLOCK, 1), name, "");
                 i++;
                 if (i % 9 == 8) {
@@ -171,12 +168,9 @@ public final class Block_clock extends JavaPlugin {
 
                 boolean enabled = clocksSection.getBoolean(name);
 
-
                 if (enabled) {
-                    Clock clock = new Clock(name);
                     clock.loadConfig();
                 }
-                clockEnableStatus.put(name, enabled);
 
             }
         }
@@ -192,7 +186,7 @@ public final class Block_clock extends JavaPlugin {
     public static void customLogger(String message) {
         METADATA.PLUGIN.getLogger().info("----------------------------->" + message + "<-----------------------------");
     }
-
+//todo check https://habr.com/ru/articles/649363/
 }
 
 
@@ -200,19 +194,15 @@ class CustomRunnable implements Runnable {
     @Override
     public void run() {
         while (!Thread.currentThread().isInterrupted()) {
-            // Выполняем задачу в основном потоке Bukkit
             Bukkit.getScheduler().runTask(METADATA.PLUGIN, () -> {
-//                System.out.println("Block_clock.ClockMap.values() ---------------------------> " + Block_clock.ClockMap.values()+"<-------------------------------");
                 for (Clock clock : Block_clock.ClockMap.values()) {
                     clock.UpdateTime();
                 }
             });
 
             try {
-                // Задержка 1 сек
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
-//                e.printStackTrace();
                 METADATA.PLUGIN.getLogger().info("stopping thread");
                 Thread.currentThread().interrupt(); // Прерывание
                 return;

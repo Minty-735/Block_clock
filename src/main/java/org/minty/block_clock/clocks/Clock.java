@@ -19,9 +19,26 @@ import static org.minty.block_clock.Block_clock.*;
 import static org.minty.block_clock.utils.calc_line.drawLine;
 
 public class Clock {
-    public Clock(String name) {
+
+    private Clock(String name) {
         this.name = name;
-        ClockMap.put(name, this);
+        this.enableStatus = false;
+    }
+
+
+//    public Clock(String name) {
+//
+//        this.name = name;
+//        this.enableStatus = false;
+//        ClockMap.put(name, this);
+//
+//    }
+
+    public static Clock getInstance(String name) {
+        if (!ClockMap.containsKey(name)) {
+            ClockMap.put(name, new Clock(name));
+        }
+        return ClockMap.get(name);
     }
 
     public Location getStartLocation() {
@@ -38,8 +55,16 @@ public class Clock {
     private ZoneId utc;
     private Location[][] matrix;
 
-    private String name;
+    public String getName() {
+        return name;
+    }
 
+    public boolean isEnableStatus() {
+        return enableStatus;
+    }
+
+    private String name;
+    private boolean enableStatus;
     private Material textBlock;
 
     private Material backgroundBlock;
@@ -69,8 +94,17 @@ public class Clock {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        enableStatus = true;
 
 
+    }
+
+    public String getFormat() {
+        return format;
+    }
+
+    public ZoneId getUtc() {
+        return utc;
     }
 
     public void loadConfig() {
@@ -88,12 +122,12 @@ public class Clock {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
+        enableStatus = true;
     }
 
     @Override
     public String toString() {
-        return "Clock{" + "startLocation=" + startLocation + ", endlocation=" + endlocation + ", format='" + format + '\'' + ", utc=" + utc + ", name='" + name + '\'' + ", textBlock=" + textBlock + ", backgroundBlock=" + backgroundBlock + '}';
+        return "Clock{" +"\n"+ "startLocation=" + startLocation + "\n"+ " endlocation=" + endlocation + "\n"+ " format='" + format + "\n"+" utc=" + utc + " name='" + name + "\n"+ " textBlock=" + textBlock + "\n"+" backgroundBlock=" + backgroundBlock + '}';
     }
 
     private void getDefaultSettings() {
@@ -138,7 +172,7 @@ public class Clock {
         removeBlocks();
         addToMainConfig(false);
         ClockMap.remove(name, this);
-
+        enableStatus = false;
     }
 
     private String getTime() {
@@ -154,60 +188,58 @@ public class Clock {
 
 
     public void UpdateTime() {
+        if (enableStatus) {
+            String time = this.getTime();
+            Location loc1 = this.getStartLocation();
+            Location loc2 = this.getEndlocation();
 
-        String time = this.getTime();
-        Location loc1 = this.getStartLocation();
-        Location loc2 = this.getEndlocation();
-
-        int x2 = loc2.getBlockX();
-        int y2 = loc2.getBlockY();
-        int x1 = loc1.getBlockX();
-        int y1 = loc1.getBlockY();
-        int z1 = loc1.getBlockZ();
-        int z2 = loc2.getBlockZ();
-
-
-        int vert = y2 - y1;
-        char[][] chats;
-
-        //chats[ВЫСОТА][ШИРИНА]
+            int x2 = loc2.getBlockX();
+            int y2 = loc2.getBlockY();
+            int x1 = loc1.getBlockX();
+            int y1 = loc1.getBlockY();
+            int z1 = loc1.getBlockZ();
+            int z2 = loc2.getBlockZ();
 
 
+            int vert = y2 - y1;
+            char[][] chats;
+
+            //chats[ВЫСОТА][ШИРИНА]
 
 
-        Material black = this.getTextBlock();
-        Material white = this.getBackgroundBlock();
+            Material black = this.getTextBlock();
+            Material white = this.getBackgroundBlock();
 
-        this.matrix = createMatrix(loc1, loc2);
+            this.matrix = createMatrix(loc1, loc2);
 //        System.out.println("matrix = " + matrix[0][0]);
 
-        chats = PainterApplication.calc(time, matrix.length, matrix[0].length);
-        chats = reverseArray(chats);
+            chats = PainterApplication.calc(time, matrix.length, matrix[0].length);
+            chats = reverseArray(chats);
 
 
-        for (int y = 0; y < chats.length - 1; y++) {
-            for (int x = 0; x < (chats[0].length - 1)/2; x++) {
+            for (int y = 0; y < chats.length - 1; y++) {
+                for (int x = 0; x < (chats[0].length - 1) / 2; x++) {
 
-                char pixel = chats[y][x*2];
-                //chats[ВЫСОТА][ШИРИНА]
+                    char pixel = chats[y][x * 2];
+                    //chats[ВЫСОТА][ШИРИНА]
 
-                Location loc = matrix[x * 2][y];
+                    Location loc = matrix[x * 2][y];
 
-                Block blk = loc.getBlock();
-                if (pixel == '*') {
-                    if (blk.getType() != white) {
-                        blk.setType(white);
-                    }
-                } else {
+                    Block blk = loc.getBlock();
+                    if (pixel == '*') {
+                        if (blk.getType() != white) {
+                            blk.setType(white);
+                        }
+                    } else {
 
-                    if (blk.getType() != black) {
-                        blk.setType(black);
-                    }
+                        if (blk.getType() != black) {
+                            blk.setType(black);
+                        }
 //                    blk.setType(black);
+                    }
                 }
             }
         }
-
     }
 
     /**
